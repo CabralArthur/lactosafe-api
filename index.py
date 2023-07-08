@@ -3,10 +3,10 @@ import cv2
 import numpy as np
 
 # Carregar o modelo treinado
-model = load_model('meu_modelo2.h5')
+model = load_model('lactosafe_modelo.h5')
 
 # Carregar a imagem de teste
-image_path = 'maca1.jpg'
+image_path = './data/inputs/maca1.jpg'
 image = cv2.imread(image_path)
 
 # Pré-processar a imagem

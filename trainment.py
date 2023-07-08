@@ -1,24 +1,12 @@
-# Importar as bibliotecas necessárias
+# Importação de bibliotecas
 import os
 import cv2
-import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-# Passo 1: Coletar e preparar os dados
-# ...
-
-# Passo 2: Dividir os dados em conjuntos de treinamento, validação e teste
-# ...
-
-# Passo 3: Pré-processar as imagens
-# ...
-img_heigth, img_width = 150, 150
-batch_size = 4
-num_classes = 2
-epochs = 25
+img_heigth, img_width, batch_size, num_classes, epochs = 150, 150, 4, 2, 25
 
 # Função para processar e substituir as imagens
 def preprocess_and_replace_images(image_folder, target_size):
@@ -38,22 +26,11 @@ def preprocess_and_replace_images(image_folder, target_size):
 # Definir o caminho da pasta das imagens
 image_folder_train = 'data/treino/classe2'
 image_folder_val = 'data/validacao/classe2'
+
 # Definir o tamanho de destino para redimensionamento
 target_size = (150,150)
-# Chamar a função para processar e substituir as imagens
 
-
-
-
-
-
-# Passo 4: Construir a arquitetura da CNN
-# ...
-# Definir a arquitetura da CNN
-
-# Passo 5: Treinar a CNN
-# ...
-# Carregar e pré-processar os dados
+# Diretórios de treinamento e validação
 train_data_dir = 'data/treino'
 validation_data_dir = 'data/validacao'
 
@@ -92,6 +69,7 @@ validation_generator = validation_datagen.flow_from_directory(
     batch_size=batch_size,
     class_mode='categorical'
 )
+
 # Treinar o modelo
 modelo.fit(
     train_generator,
@@ -101,10 +79,6 @@ modelo.fit(
     validation_steps=validation_generator.samples // batch_size
 )
 
-modelo.save('meu_modelo3.h5')
-print('sucesso')
-# Passo 6: Avaliar o desempenho do modelo
-# ...
+modelo.save('lactosafe_modelo.h5')
 
-# Passo 7: Testar o modelo
-# ...
+print('Modelo Treinado Com Sucesso!')
