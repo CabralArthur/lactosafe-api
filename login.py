@@ -1,5 +1,5 @@
 from flask import Flask, request
-import mysql.connector
+from mysql.connector import connect
 
 app = Flask(__name__)
 
@@ -11,7 +11,7 @@ def fazer_login():
     senha = data['senha']
 
     # Conectar ao banco de dados
-    db = mysql.connector.connect(
+    db = connect(
         host="localhost",
         user="seu_usuario",
         password="sua_senha",
@@ -22,12 +22,13 @@ def fazer_login():
     cursor = db.cursor()
 
     # Executar a query para buscar o usuário pelo email e senha
-    query = "SELECT * FROM USUARIO WHERE EMAIL = %s AND SENHA = %s"
+    query = "SELECT * FROM USUARIO WHERE EMAIL = %s AND SENHA = %s LIMIT 1"
     values = (email, senha)
     cursor.execute(query, values)
 
     # Verificar se o usuário existe no banco de dados
     usuario = cursor.fetchone()
+
     if usuario:
         # Usuário autenticado, fazer algo aqui (exemplo: retornar uma mensagem de sucesso)
         mensagem = {'message': 'Login realizado com sucesso'}

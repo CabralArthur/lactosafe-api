@@ -1,6 +1,6 @@
 from tensorflow.keras.models import load_model
-import cv2
-import numpy as np
+from cv2 import imread, resize
+from numpy import expand_dims, array, argmax
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
@@ -13,27 +13,26 @@ model = load_model('modelo1.h5')
 
 # Fazer a previsão
 
-
 # Imprimir as probabilidades de todas as classes
-@app.route('/test', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def teste():
-    return ('Sucesso')
+    return ('OK')
 
 @app.route('/recognize-image', methods=['POST'])
 def recognize_image():
     # Obtenha a imagem enviada na requisição
     image = request.files['image']
     image.save('temp_image.jpg')  # Salva a imagem em um arquivo temporário
-    image = cv2.imread('temp_image.jpg')  # Lê a imagem do arquivo temporário
-    image = cv2.resize(image, (150, 150))
+    image = imread('temp_image.jpg')  # Lê a imagem do arquivo temporário
+    image = resize(image, (150, 150))
     image = image.astype('float32') / 255.0
-    image = np.expand_dims(image, axis=0)
+    image = expand_dims(image, axis=0)
     # Execute o algoritmo de reconhecimento de imagem na imagem recebida
     probabilities = model.predict(image)
-    probabilities = np.array(probabilities)
+    probabilities = array(probabilities)
 
     # Obtém o índice da maior probabilidade
-    max_index = np.argmax(probabilities)
+    max_index = argmax(probabilities)
 
     # Recupera a classe correspondente ao índice
     class_label = f'Classe {max_index}'

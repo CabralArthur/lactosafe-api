@@ -1,6 +1,6 @@
 # Importação de bibliotecas
 import os
-import cv2
+from cv2 import imread, resize, imwrite
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras import regularizers
@@ -16,13 +16,13 @@ def preprocess_and_replace_images(image_folder, target_size):
         image_path = os.path.join(image_folder, filename)
         
         # Carregar a imagem
-        image = cv2.imread(image_path)
+        image = imread(image_path)
         
         # Redimensionar a imagem
-        resized_image = cv2.resize(image, target_size)
+        resized_image = resize(image, target_size)
         
         # Substituir a imagem original pela redimensionada
-        cv2.imwrite(image_path, resized_image)
+        imwrite(image_path, resized_image)
 
 # Definir o caminho da pasta das imagens
 image_folder_train = 'data/treino/classe1'

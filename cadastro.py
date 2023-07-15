@@ -1,5 +1,5 @@
 from flask import Flask, request
-import mysql.connector
+from mysql.connector import connect
 
 app = Flask('app')
 
@@ -11,7 +11,7 @@ def cadastrar_usuario():
     senha = data['senha']
 
     # Conectar ao banco de dados
-    db = mysql.connector.connect(
+    db = connect(
         host="localhost",
         user="seu_usuario",
         password="sua_senha",
