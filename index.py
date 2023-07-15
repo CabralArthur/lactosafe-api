@@ -6,7 +6,7 @@ import numpy as np
 model = load_model('lactosafe_modelo.h5')
 
 # Carregar a imagem de teste
-image_path = './data/inputs/maca1.jpg'
+image_path = './data/inputs/maca2.jpg'
 image = cv2.imread(image_path)
 
 # Pré-processar a imagem
