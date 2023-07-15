@@ -21,6 +21,20 @@ def cadastrar_usuario():
     # Criar o cursor
     cursor = db.cursor()
 
+    # Executar a query para buscar o usuário pelo email e senha
+    query = "SELECT * FROM USUARIO WHERE EMAIL = %s"
+    values = (email)
+    cursor.execute(query, values)
+
+    # Verificar se o usuário existe no banco de dados
+    usuario = cursor.fetchone()
+
+    if usuario:
+        # Usuário já existende no sistema, logo, as credenciais estão inválidas
+        mensagem = {'message': 'Credenciais inválidas'}
+
+        return mensagem
+
     # Executar a query para cadastrar o usuário
     query = "INSERT INTO USUARIO (EMAIL, SENHA) VALUES (%s, %s)"
     values = (email, senha)
@@ -33,8 +47,10 @@ def cadastrar_usuario():
     cursor.close()
     db.close()
 
+    mensagem = {'message': 'Usuário cadastrado com sucesso'}
+
     # Retornar uma resposta de sucesso
-    return {'message': 'Usuário cadastrado com sucesso'}
+    return mensagem
 
 if __name__ == '__main__':
     app.run()
