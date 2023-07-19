@@ -42,7 +42,11 @@ def recognize_image():
 
     os.remove('temp_image.jpg')
     # Retorne os resultados em formato JSON
-    return jsonify(f'{class_label}: {percentage}%')
+    if class_label == 'Classe 0':
+        return jsonify(f'Maca: {percentage}%')
+
+    elif class_label == 'Classe 1':
+        return jsonify(f'Banana: {percentage}%')
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
