@@ -13,17 +13,18 @@ def cadastrar_usuario():
     # Conectar ao banco de dados
     db = connect(
         host="localhost",
-        user="seu_usuario",
-        password="sua_senha",
-        database="seu_banco_de_dados"
+        user="root",
+        password="",
+        database="lactosafe_db"
     )
 
     # Criar o cursor
     cursor = db.cursor()
 
     # Executar a query para buscar o usuário pelo email e senha
+    
     query = "SELECT * FROM USUARIO WHERE EMAIL = %s"
-    values = (email)
+    values = (email,)
     cursor.execute(query, values)
 
     # Verificar se o usuário existe no banco de dados
@@ -34,7 +35,7 @@ def cadastrar_usuario():
         mensagem = {'message': 'Credenciais inválidas'}
 
         return mensagem
-
+    
     # Executar a query para cadastrar o usuário
     query = "INSERT INTO USUARIO (EMAIL, SENHA) VALUES (%s, %s)"
     values = (email, senha)
@@ -53,4 +54,4 @@ def cadastrar_usuario():
     return mensagem
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run()

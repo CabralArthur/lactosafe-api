@@ -13,9 +13,9 @@ def fazer_login():
     # Conectar ao banco de dados
     db = connect(
         host="localhost",
-        user="seu_usuario",
-        password="sua_senha",
-        database="seu_banco_de_dados"
+        user="root",
+        password="",
+        database="lactosafe_db"
     )
 
     # Criar o cursor
