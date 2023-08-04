@@ -4,12 +4,13 @@ from numpy import expand_dims, array, argmax
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
+import numpy as np
 
 app = Flask('app')
 CORS(app)
 
 # Carregar o modelo treinado
-model = load_model('modelo2.h5')
+model = load_model('modelo1.h5')
 
 # Fazer a previsão
 
@@ -29,27 +30,28 @@ def recognize_image():
     image = expand_dims(image, axis=0)
     # Execute o algoritmo de reconhecimento de imagem na imagem recebida
     probabilities = model.predict(image)
-    probabilities = array(probabilities)
+    probabilities = probabilities[0]  # Extrair as probabilidades da matriz
 
-    # Obtém o índice da maior probabilidade
-    max_index = argmax(probabilities)
+    # Obter os índices dos 3 maiores valores de probabilidade
+    top_3_indices = np.argsort(probabilities)[-3:][::-1]
 
-    # Recupera a classe correspondente ao índice
-    class_label = f'Classe {max_index}'
+    # Criar uma lista com as três maiores probabilidades e suas respectivas classes
+    top_3_results = []
+    for index in top_3_indices:
+        class_label = ""
+        if index == 0:
+            class_label = 'Maca'
+        elif index == 1:
+            class_label = 'Banana'
+        elif index == 2:
+            class_label = 'Pizza'
+        
+        probability = round(probabilities[index] * 100, 2)
+        if probability > 0:
+            top_3_results.append(f'{class_label}: {probability}%')
 
-    # Calcula a porcentagem da maior probabilidade
-    percentage = round(max(probabilities[0]) * 100, 2)
-
-    os.remove('temp_image.jpg')
     # Retorne os resultados em formato JSON
-    if class_label == 'Classe 0':
-        return jsonify(f'Maca: {percentage}%')
-
-    elif class_label == 'Classe 1':
-        return jsonify(f'Banana: {percentage}%')
-    
-    elif class_label == 'Classe 2':
-        return jsonify(f'Pizza: {percentage}%')
+    return jsonify(top_3_results)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
