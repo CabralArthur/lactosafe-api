@@ -48,7 +48,7 @@ def recognize_image():
         
         probability = round(probabilities[index] * 100, 2)
         if probability > 0:
-            top_3_results.append(f'{class_label}: {probability}%')
+            top_3_results.append({'nome': class_label, 'porcentagem': f'{probability}%'})
 
     # Retorne os resultados em formato JSON
     return jsonify(top_3_results)
