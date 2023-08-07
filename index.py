@@ -9,7 +9,7 @@ app = Flask('app')
 CORS(app)
 
 # Carregar o modelo treinado
-model = load_model('modelo1.h5')
+model = load_model('modelo2.h5')
 
 # Fazer a previsão
 
@@ -44,10 +44,12 @@ def recognize_image():
     # Retorne os resultados em formato JSON
     if class_label == 'Classe 0':
         return jsonify({'nome': 'Maca', 'porcentagem': f'{percentage}%'})
-   
 
     elif class_label == 'Classe 1':
         return jsonify({'nome': 'Banana', 'porcentagem': f'{percentage}%'})
+    
+    elif class_label == 'Classe 2':
+        return jsonify({'nome': 'Pizza', 'porcentagem': f'{percentage}%'})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
