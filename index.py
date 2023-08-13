@@ -46,7 +46,8 @@ def recognize_image():
         elif index == 2:
             class_label = 'Pizza'
         
-        probability = float (round(probabilities[index] * 100, 2))
+        probability = round(probabilities[index] * 100, 2)
+        probability = float(probability)
         if probability > 0:
             top_3_results['recognized_foods'].append({'nome': class_label, 'porcentagem': probability})
 
