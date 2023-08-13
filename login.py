@@ -31,11 +31,11 @@ def fazer_login():
 
     if usuario:
         # Usuário autenticado, fazer algo aqui (exemplo: retornar uma mensagem de sucesso)
-        mensagem = {'message': 'Login realizado com sucesso'}
+        mensagem = { 'message': 'Login realizado com sucesso', 'isLogged': True }
 
     else:
         # Usuário não encontrado, retornar uma mensagem de erro
-        mensagem = {'error': 'Credenciais inválidas'}
+        mensagem = { 'error': 'Credenciais inválidas', 'isLogged': False }
 
     # Fechar o cursor e a conexão com o banco de dados
     cursor.close()
