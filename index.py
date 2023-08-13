@@ -36,7 +36,7 @@ def recognize_image():
     top_3_indices = np.argsort(probabilities)[-3:][::-1]
 
     # Criar uma lista com as três maiores probabilidades e suas respectivas classes
-    top_3_results = []
+    top_3_results = {'recognized_foods': []}
     for index in top_3_indices:
         class_label = ""
         if index == 0:
@@ -46,9 +46,9 @@ def recognize_image():
         elif index == 2:
             class_label = 'Pizza'
         
-        probability = round(probabilities[index] * 100, 2)
+        probability = float (round(probabilities[index] * 100, 2))
         if probability > 0:
-            top_3_results.append({'nome': class_label, 'porcentagem': f'{probability}%'})
+            top_3_results['recognized_foods'].append({'nome': class_label, 'porcentagem': probability})
 
     # Retorne os resultados em formato JSON
     return jsonify(top_3_results)
