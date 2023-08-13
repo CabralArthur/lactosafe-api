@@ -39,17 +39,18 @@ def recognize_image():
 
     # Calcula a porcentagem da maior probabilidade
     percentage = round(max(probabilities[0]) * 100, 2)
+    percentage = float(percentage)
 
     os.remove('temp_image.jpg')
     # Retorne os resultados em formato JSON
     if class_label == 'Classe 0':
-        return jsonify({'nome': 'Maca', 'porcentagem': f'{percentage}%'})
+        return jsonify({'nome': 'Maca', 'porcentagem': percentage})
 
     elif class_label == 'Classe 1':
-        return jsonify({'nome': 'Banana', 'porcentagem': f'{percentage}%'})
+        return jsonify({'nome': 'Banana', 'porcentagem': percentage})
     
     elif class_label == 'Classe 2':
-        return jsonify({'nome': 'Pizza', 'porcentagem': f'{percentage}%'})
+        return jsonify({'nome': 'Pizza', 'porcentagem': percentage})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
