@@ -25,7 +25,7 @@ def calcular_risco_lactose(id_usuario, nome_alimento):
     tipo_id = tipo_id[0]
 
     # Buscar todos os alimentos que são do mesmo tipo
-    cursor.execute("SELECT id FROM ALIMENTO WHERE id = %s", (tipo_id,))
+    cursor.execute("SELECT id FROM ALIMENTO WHERE TIPO_ALIMENTO_ID = %s", (tipo_id,))
     alimentos_similares = cursor.fetchall()
 
     if not alimentos_similares:
@@ -38,7 +38,7 @@ def calcular_risco_lactose(id_usuario, nome_alimento):
 
     for alimento_id in alimentos_similares:
         alimento_id = alimento_id[0]
-        cursor.execute("SELECT lactose FROM tabela_nutricional WHERE id = %s", (alimento_id,))
+        cursor.execute("SELECT lactose FROM TABELA_NUTRICIONAL WHERE id = %s", (alimento_id,))
         lactose_alimento = cursor.fetchone()
 
         if lactose_alimento is not None and lactose_alimento[0] is not None:
@@ -93,7 +93,7 @@ def calcular_risco():
     if id_usuario is None or nome_alimento is None:
         return jsonify({'error': 'Parâmetros incompletos'}), 400
         
-    risco_lactose = calcular_risco_lactose(id_usuario, [nome_alimento]  )
+    risco_lactose = calcular_risco_lactose(id_usuario, [nome_alimento])
 
     if risco_lactose == 0:
         risco_str = 'inexistente'
