@@ -10,7 +10,7 @@ app = Flask('app')
 CORS(app)
 
 # Carregar o modelo treinado
-model = load_model('modelo1.h5')
+model = load_model('modelo2.h5')
 
 # Fazer a previsão
 
@@ -41,15 +41,18 @@ def recognize_image():
         class_label = ""
         if index == 0:
             class_label = 'Maca'
+            image_url = 'https://i.imgur.com/IQapJAa.jpg'
         elif index == 1:
             class_label = 'Banana'
+            image_url = 'https://i.imgur.com/dZ52849.jpg'
         elif index == 2:
             class_label = 'Pizza'
+            image_url = 'https://i.imgur.com/vgSYyFu.jpg'
         
         probability = round(probabilities[index] * 100, 2)
         probability = float(probability)
         if probability > 0:
-            top_3_results['recognized_foods'].append({'nome': class_label, 'porcentagem': probability})
+            top_3_results['recognized_foods'].append({'nome': class_label, 'porcentagem': probability, 'imageUrl': image_url})
 
     # Retorne os resultados em formato JSON
     return jsonify(top_3_results)
