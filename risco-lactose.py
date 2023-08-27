@@ -117,15 +117,15 @@ def calcular_risco():
     risco_lactose = calcular_risco_lactose(id_usuario, nome_alimento, imagem_id, alimento_id)
     
     if risco_lactose == 0:
-        risco_str = 'inexistente'
+        risco_str = 'Inexistente'
     elif 1 <= risco_lactose <= 25:
-        risco_str = 'baixo'
+        risco_str = 'Baixo'
     elif 25 < risco_lactose <= 50:
-        risco_str = 'medio'
+        risco_str = 'Medio'
     elif 50 < risco_lactose <= 75:
-        risco_str = 'alto'
+        risco_str = 'Alto'
     else:
-        risco_str = 'muito alto'
+        risco_str = 'Muito alto'
 
     # Montar a resposta em JSON
     resposta = {
