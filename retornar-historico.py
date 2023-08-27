@@ -14,7 +14,7 @@ def obter_historico_usuario(id_usuario):
     cursor = conn.cursor()
 
     # Buscar o histórico de alimentos visualizados pelo usuário
-    cursor.execute("SELECT ID_ALIMENTO, RISCO_FLOAT, RISCO_STR FROM historico WHERE ID_USUARIO = %s", (id_usuario,))
+    cursor.execute("SELECT ID_ALIMENTO, RISCO_FLOAT, RISCO_STR FROM historico WHERE ID_USUARIO = %s ORDER BY ID DESC", (id_usuario,))
     historico_alimentos = cursor.fetchall()
 
     alimentos_info = []
