@@ -57,15 +57,15 @@ def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id,id_al):
     risco_lactose = float(risco_lactose)
      # Definir a string de risco com base no valor do risco de lactose
     if risco_lactose == 0:
-        risco_str = 'inexistente'
+        risco_str = 'Inexistente'
     elif 1 <= risco_lactose <= 25:
-        risco_str = 'baixo'
+        risco_str = 'Baixo'
     elif 25 < risco_lactose <= 50:
-        risco_str = 'medio'
+        risco_str = 'Medio'
     elif 50 < risco_lactose <= 75:
-        risco_str = 'alto'
+        risco_str = 'Alto'
     else:
-        risco_str = 'muito alto'
+        risco_str = 'Muito Alto'
 
     # Inserir os dados na tabela "historico"
     sql = "INSERT INTO historico (ID_USUARIO, ID_ALIMENTO, RISCO_FLOAT, RISCO_STR, ID_IMAGEM) VALUES (%s, %s, %s, %s, %s)"
