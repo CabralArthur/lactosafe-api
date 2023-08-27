@@ -44,7 +44,7 @@ def recognize_image():
             image_url = 'https://i.imgur.com/IQapJAa.jpg'
         elif index == 1:
             class_label = 'Banana'
-            image_url = 'https://i.imgur.com/dZ52849.jpg'
+            image_url = 'https://i.imgur.com/W9h9tQt.jpg'
         elif index == 2:
             class_label = 'Pizza'
             image_url = 'https://i.imgur.com/vgSYyFu.jpg'
