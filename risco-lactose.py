@@ -3,7 +3,7 @@ import mysql.connector
 
 app = Flask('app')
 
-def calcular_risco_lactose(id_usuario, nome_alimento):
+def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id):
     # Conectar ao banco de dados
     conn = mysql.connector.connect(
         host="127.0.0.1",
@@ -15,7 +15,7 @@ def calcular_risco_lactose(id_usuario, nome_alimento):
     cursor = conn.cursor()
 
     # Encontrar o ID do tipo de alimento na tabela de tipos
-    cursor.execute("SELECT TIPO_ALIMENTO_ID FROM ALIMENTO WHERE NOME = %s", (nome_alimento))
+    cursor.execute("SELECT TIPO_ALIMENTO_ID FROM ALIMENTO WHERE NOME = %s", (nome_alimento,))
     tipo_id = cursor.fetchone()
 
     if tipo_id is None:
@@ -68,8 +68,8 @@ def calcular_risco_lactose(id_usuario, nome_alimento):
         risco_str = 'muito alto'
 
     # Inserir os dados na tabela "historico"
-    sql = "INSERT INTO historico (ID_USUARIO, ID_ALIMENTO, RISCO_FLOAT, RISCO_STR) VALUES (%s, %s, %s, %s)"
-    values = (id_usuario, tipo_id, risco_lactose, risco_str)
+    sql = "INSERT INTO historico (ID_USUARIO, ID_ALIMENTO, RISCO_FLOAT, RISCO_STR, ID_IMAGEM) VALUES (%s, %s, %s, %s, %s)"
+    values = (id_usuario, tipo_id, risco_lactose, risco_str, imagem_id)
     cursor.execute(sql, values)
 
     # Fazer o commit para salvar as alterações no banco de dados
@@ -83,7 +83,6 @@ def calcular_risco_lactose(id_usuario, nome_alimento):
 def calcular_risco():
     # Obtém os dados da requisição POST
     data = request.get_json()
-        
     if not data:
         return jsonify({'error': 'Dados não fornecidos'}), 400
         
@@ -93,8 +92,30 @@ def calcular_risco():
     if id_usuario is None or nome_alimento is None:
         return jsonify({'error': 'Parâmetros incompletos'}), 400
         
-    risco_lactose = calcular_risco_lactose(id_usuario, [nome_alimento])
+    conn = mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="26112002",
+        database="lactosafe_db"
+    )
 
+    cursor = conn.cursor()
+
+    # Buscar o ID do alimento na tabela ALIMENTO
+    cursor.execute("SELECT ID FROM ALIMENTO WHERE NOME = %s", (nome_alimento,))
+    alimento_id = cursor.fetchone()[0]
+    # Buscar o link da imagem na tabela IMAGEM usando o ID do alimento
+    cursor.execute("SELECT IMAGEM FROM IMAGEM WHERE ALIMENTO_ID = %s", (alimento_id,))
+    imagem_link = cursor.fetchone()[0]
+    # Buscar o id da imagem na tabela IMAGEM usando o link
+    cursor.execute("SELECT ID FROM IMAGEM WHERE IMAGEM = %s", (imagem_link,))
+    imagem_id = cursor.fetchone()[0]
+    # Buscar o texto_ajuda da alimento na tabela ALIMENTO usando o id
+    cursor.execute("SELECT TEXTO_AJUDA FROM ALIMENTO WHERE ID = %s", (alimento_id,))
+    texto_ajuda = cursor.fetchone()[0]
+    conn.close()   
+    risco_lactose = calcular_risco_lactose(id_usuario, nome_alimento, imagem_id)
+    
     if risco_lactose == 0:
         risco_str = 'inexistente'
     elif 1 <= risco_lactose <= 25:
@@ -109,7 +130,8 @@ def calcular_risco():
     # Montar a resposta em JSON
     resposta = {
         'risco_lactose': risco_lactose,
-        'risco_str': risco_str
+        'risco_str': risco_str,
+        'texto_ajuda' : texto_ajuda
     }
 
     return jsonify(resposta)
