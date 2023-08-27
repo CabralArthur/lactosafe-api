@@ -3,7 +3,7 @@ import mysql.connector
 
 app = Flask('app')
 
-def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id):
+def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id,id_al):
     # Conectar ao banco de dados
     conn = mysql.connector.connect(
         host="127.0.0.1",
@@ -69,7 +69,7 @@ def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id):
 
     # Inserir os dados na tabela "historico"
     sql = "INSERT INTO historico (ID_USUARIO, ID_ALIMENTO, RISCO_FLOAT, RISCO_STR, ID_IMAGEM) VALUES (%s, %s, %s, %s, %s)"
-    values = (id_usuario, tipo_id, risco_lactose, risco_str, imagem_id)
+    values = (id_usuario, id_al, risco_lactose, risco_str, imagem_id)
     cursor.execute(sql, values)
 
     # Fazer o commit para salvar as alterações no banco de dados
@@ -114,7 +114,7 @@ def calcular_risco():
     cursor.execute("SELECT TEXTO_AJUDA FROM ALIMENTO WHERE ID = %s", (alimento_id,))
     texto_ajuda = cursor.fetchone()[0]
     conn.close()   
-    risco_lactose = calcular_risco_lactose(id_usuario, nome_alimento, imagem_id)
+    risco_lactose = calcular_risco_lactose(id_usuario, nome_alimento, imagem_id, alimento_id)
     
     if risco_lactose == 0:
         risco_str = 'inexistente'
