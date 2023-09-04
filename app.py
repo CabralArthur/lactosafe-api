@@ -22,7 +22,7 @@ def cadastrar_usuario():
     db = connect(
         host="localhost",
         user="root",
-        password="",
+        password="1234",
         database="lactosafe_db"
     )
 
@@ -73,7 +73,7 @@ def fazer_login():
     db = connect(
         host="localhost",
         user="root",
-        password="",
+        password="1234",
         database="lactosafe_db"
     )
 
@@ -90,11 +90,11 @@ def fazer_login():
 
     if usuario:
         # Usuário autenticado, fazer algo aqui (exemplo: retornar uma mensagem de sucesso)
-        mensagem = { 'message': 'Login realizado com sucesso', 'isLogged': True }
+        mensagem = { 'userID': usuario[0], 'isLogged': True, 'message': 'Login realizado com sucesso'}
 
     else:
         # Usuário não encontrado, retornar uma mensagem de erro
-        mensagem = { 'error': 'Credenciais inválidas', 'isLogged': False }
+        mensagem = { 'error': 'Email ou senha incorretos', 'isLogged': False }
 
     # Fechar o cursor e a conexão com o banco de dados
     cursor.close()
@@ -116,7 +116,7 @@ def alterar_senha():
     db = connect(
         host="localhost",
         user="root",
-        password="",
+        password="1234",
         database="lactosafe_db"
     )
 
@@ -199,21 +199,21 @@ def recognize_image():
 #risco-lactose
 def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id,id_al):
     # Conectar ao banco de dados
-    conn = connect.connect(
+    db = connect(
         host="127.0.0.1",
         user="root",
-        password="26112002",
+        password="1234",
         database="lactosafe_db"
     )
 
-    cursor = conn.cursor()
+    cursor = db.cursor()
 
     # Encontrar o ID do tipo de alimento na tabela de tipos
     cursor.execute("SELECT TIPO_ALIMENTO_ID FROM ALIMENTO WHERE NOME = %s", (nome_alimento,))
     tipo_id = cursor.fetchone()
 
     if tipo_id is None:
-        conn.close()
+        db.close()
         return "Tipo de alimento não encontrado no banco de dados."
 
     tipo_id = tipo_id[0]
@@ -223,7 +223,7 @@ def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id,id_al):
     alimentos_similares = cursor.fetchall()
 
     if not alimentos_similares:
-        conn.close()
+        db.close()
         return "Não há alimentos do mesmo tipo no banco de dados."
 
     # Calcular a quantidade total de lactose dos alimentos similares
@@ -243,7 +243,7 @@ def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id,id_al):
     if num_alimentos > 0:
         media_lactose = total_lactose / num_alimentos
     else:
-        conn.close()
+        db.close()
         return "Não foi encontrada informação nutricional para os alimentos similares."
 
     # Calcular o risco de lactose do alimento
@@ -267,7 +267,7 @@ def calcular_risco_lactose(id_usuario, nome_alimento, imagem_id,id_al):
     cursor.execute(sql, values)
 
     # Fazer o commit para salvar as alterações no banco de dados
-    conn.commit()
+    db.commit()
 
     # Fechar a conexão com o banco de dados
     cursor.close()
@@ -286,14 +286,14 @@ def calcular_risco():
     if id_usuario is None or nome_alimento is None:
         return jsonify({'error': 'Parâmetros incompletos'}), 400
         
-    conn = connect.connect(
+    db = connect(
         host="127.0.0.1",
         user="root",
-        password="26112002",
+        password="1234",
         database="lactosafe_db"
     )
 
-    cursor = conn.cursor()
+    cursor = db.cursor()
 
     # Buscar o ID do alimento na tabela ALIMENTO
     cursor.execute("SELECT ID FROM ALIMENTO WHERE NOME = %s", (nome_alimento,))
@@ -307,7 +307,7 @@ def calcular_risco():
     # Buscar o texto_ajuda da alimento na tabela ALIMENTO usando o id
     cursor.execute("SELECT TEXTO_AJUDA FROM ALIMENTO WHERE ID = %s", (alimento_id,))
     texto_ajuda = cursor.fetchone()[0]
-    conn.close()   
+    db.close()   
     risco_lactose = calcular_risco_lactose(id_usuario, nome_alimento, imagem_id, alimento_id)
     
     if risco_lactose == 0:
@@ -332,14 +332,14 @@ def calcular_risco():
 
 #historico
 def obter_historico_usuario(id_usuario):
-    conn = connect.connect(
+    db = connect(
         host="127.0.0.1",
         user="root",
-        password="26112002",
+        password="1234",
         database="lactosafe_db"
     )
 
-    cursor = conn.cursor()
+    cursor = db.cursor()
 
     # Buscar o histórico de alimentos visualizados pelo usuário
     cursor.execute("SELECT ID_ALIMENTO, RISCO_FLOAT, RISCO_STR FROM historico WHERE ID_USUARIO = %s ORDER BY ID DESC", (id_usuario,))
@@ -362,7 +362,7 @@ def obter_historico_usuario(id_usuario):
             'imageUrl': imagem_link[0] if imagem_link else None
         })
 
-    conn.close()
+    db.close()
     return alimentos_info
 
 @app.route('/historico_alimentos', methods=['POST'])
@@ -378,4 +378,4 @@ def historico_alimentos():
     return jsonify({'historico_alimentos': historico})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
